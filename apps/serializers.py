@@ -3,20 +3,22 @@ from rest_framework.fields import CharField
 from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-User = get_user_model()
+from apps.models import User
+
 
 class RegisterSerializer(ModelSerializer):
     password = CharField(max_length=10, write_only=True)
     class Meta:
         model = User
-        fields = ['email', 'password', 'full_name', 'phone_number']
+        fields = ['email', 'password', 'full_name', 'phone_number', "username"]
 
     def create(self, validated_data):
         user = User.objects.create_user(
             email = validated_data['email'],
             full_name = validated_data['full_name'],
             phone_number = validated_data['phone_number'],
-            password = self.validated_data['password']
+            password = self.validated_data['password'],
+            username = self.validated_data['username']
         )
         return user
     def present(self, info):

@@ -45,7 +45,7 @@ class CustomUserManager(UserManager):
     async def acreate_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        return await self._acreate_user(username, email, password, **extra_fields)
+        return await self._acreate_user(email, password, **extra_fields)
 
     acreate_user.alters_data = True
 
@@ -58,7 +58,7 @@ class CustomUserManager(UserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self._create_user(username, email, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
     create_superuser.alters_data = True
 
