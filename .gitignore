@@ -1,0 +1,4 @@
+.idea
+.venv
+apps/migrations/*
+db.sqlite3.db
