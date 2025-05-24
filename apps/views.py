@@ -1,21 +1,18 @@
-from rest_framework import generics
-from apps.models import Contact
-from apps.serializer import ContactSerializer
-
-
-class ContactRetrieveAPIView(generics.RetrieveAPIView):
-    queryset = Contact.objects.all()
-    serializer_class = ContactSerializer
-
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from apps.models import Contact, Debt
+from apps.serializers import ContactSerializer, DebtModelSerializer
 
-from apps.models import Debt
-from apps.serializers import DebtModelSerializer
 
-class ContactCreateAPIView(generics.CreateAPIView):
+class ContactRetrieveAPIView(RetrieveAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+
+class ContactCreateAPIView(CreateAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+
 
 @extend_schema(tags=['debt']
                )

@@ -1,9 +1,7 @@
 from datetime import datetime
-
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
-
-from apps.models import Debt
+from apps.models import Debt, Contact
 
 
 class DebtModelSerializer(ModelSerializer):
@@ -16,3 +14,8 @@ class DebtModelSerializer(ModelSerializer):
             raise ValidationError("Due date cannot be in the past")
         return value
 
+
+class ContactSerializer(ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = '__all__'

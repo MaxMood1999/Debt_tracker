@@ -1,10 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.db import models
 from django.db.models import CharField, Model, ForeignKey, CASCADE
 from django.db.models.fields import DecimalField, DateTimeField, BooleanField
-
-
 
 
 class CustomUserManager(UserManager):
@@ -12,25 +9,16 @@ class CustomUserManager(UserManager):
         if not email:
             raise ValueError("The given username must be set")
         email = self.normalize_email(email)
-        # Lookup the real model class from the global app registry so this
-        # manager method can be used in migrations. This is fine because
-        # managers are by definition working on the real model.
-
-
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
         return user
 
     def _create_user(self, email, password, **extra_fields):
-        """
-        Create and save a user with the given email, email, and password.
-        """
         user = self._create_user_object(email, password, **extra_fields)
         user.save(using=self._db)
         return user
 
     async def _acreate_user(self, email, password, **extra_fields):
-        """See _create_user()"""
         user = self._create_user_object(email, password, **extra_fields)
         await user.asave(using=self._db)
         return user
@@ -77,6 +65,7 @@ class CustomUserManager(UserManager):
 
     acreate_superuser.alters_data = True
 
+
 class User(AbstractUser):
     balance = DecimalField(max_digits=10, decimal_places=2, default=0)
     USERNAME_FIELD = 'email'
@@ -84,11 +73,13 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
 
+
 class Contact(Model):
     user = ForeignKey('apps.User', on_delete=CASCADE)
     name = CharField(max_length=255)
     phone_number = CharField(max_length=255)
     created_at = DateTimeField(auto_now_add=True)
+
 
 class Debt(Model):
     contact = ForeignKey('apps.Contact', on_delete=CASCADE)
@@ -99,7 +90,3 @@ class Debt(Model):
     is_my_debt = BooleanField(default=False)
     is_paid_back = BooleanField(default=False)
     is_overdue = BooleanField(default=False)
-
-
-
-
