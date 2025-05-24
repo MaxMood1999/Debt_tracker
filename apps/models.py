@@ -58,7 +58,7 @@ class CustomUserManager(UserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self._create_user(username, email, password, **extra_fields)
+        return self._create_user( email, password, **extra_fields)
 
     create_superuser.alters_data = True
 
@@ -78,7 +78,7 @@ class CustomUserManager(UserManager):
     acreate_superuser.alters_data = True
 
 class User(AbstractUser):
-    balance = DecimalField(max_digits=10, decimal_places=2)
+    balance = DecimalField(max_digits=10, decimal_places=2, default=0)
     USERNAME_FIELD = 'email'
     email = CharField(max_length=255, unique=True)
     REQUIRED_FIELDS = []
