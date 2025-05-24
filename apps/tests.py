@@ -8,11 +8,11 @@ from rest_framework.test import APITestCase
 
 class RegisterUserAPITestCase(APITestCase):
     def setUp(self):
-        self.url = reverse('auth-register')  # URL name ga mos bo'lishi kerak
+        self.url = reverse('auth-register')
         self.user_data = {
             "email": "user@example.com",
-            "password": "securePassword123",
-            "full_name": "John Doe",
+            "password": "password",
+            "full_name": "example_username",
             "phone_number": "+998901234567"
         }
 
