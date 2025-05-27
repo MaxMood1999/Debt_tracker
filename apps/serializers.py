@@ -1,5 +1,6 @@
 from datetime import datetime
 from rest_framework import serializers
+from apps.models import Contact
 from rest_framework.exceptions import ValidationError
 
 from django.contrib.auth import get_user_model
@@ -10,6 +11,7 @@ from rest_framework.serializers import ModelSerializer
 from apps.models import Debt, Contact
 from rest_framework.views import APIView
 
+class ContactSerializer(serializers.ModelSerializer):
 
 from apps.models import User, Debt
 
@@ -53,6 +55,8 @@ class OverdueDebtSerializer(ModelSerializer):
     is_overdue = BooleanField(source='is_overdue')
     days_until_due = SerializerMethodField()
     class Meta:
+        model = Contact
+        fields = '__all__'
         model = Debt
         fields = 'contact', 'debt_amount', 'description', 'is_my_debt', 'due_date',
 
