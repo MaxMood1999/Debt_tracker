@@ -23,3 +23,5 @@ class RegisterUserAPITestCase(APITestCase):
         self.assertEqual(response.data["data"]["user"]["email"], self.user_data["email"])
         self.assertEqual(response.data["data"]["user"]["full_name"], self.user_data["full_name"])
         self.assertEqual(response.data["data"]["user"]["phone_number"], self.user_data["phone_number"])
+
+
