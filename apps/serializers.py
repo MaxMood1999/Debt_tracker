@@ -10,10 +10,13 @@ from rest_framework.fields import CharField, IntegerField, BooleanField, Seriali
 from rest_framework.serializers import ModelSerializer
 from apps.models import Debt, Contact
 from rest_framework.views import APIView
-
-class ContactSerializer(serializers.ModelSerializer):
-
 from apps.models import User, Debt
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+
 
 
 class RegisterSerializer(ModelSerializer):
