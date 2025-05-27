@@ -12,7 +12,7 @@ from apps.serializers import RegisterSerializer, OverdueDebtSerializer
 
 
 # Create your views here.
-from apps.serializers import DebtModelSerializer, DebtSerializer
+from apps.serializers import DebtSerializer, DebtSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -22,7 +22,7 @@ from datetime import datetime
 @extend_schema(tags=['debt'])
 class DebtCreateAPIView(CreateAPIView):
     queryset = Debt.objects.all()
-    serializer_class = DebtModelSerializer
+    serializer_class = DebtSerializer
 
 @extend_schema(tags=["Register Post"])
 class RegisterView(APIView):
