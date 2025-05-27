@@ -9,7 +9,11 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
 from datetime import timedelta
-from apps.models import Contact, Debt
+from apps.models import Contact, Debt, User
+from django.contrib.auth import get_user_model
+from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
+from django.urls import reverse
 
 class RegisterUserAPITestCase(APITestCase):
     def setUp(self):
@@ -28,6 +32,52 @@ class RegisterUserAPITestCase(APITestCase):
         self.assertEqual(response.data["data"]["user"]["email"], self.user_data["email"])
         self.assertEqual(response.data["data"]["user"]["full_name"], self.user_data["full_name"])
         self.assertEqual(response.data["data"]["user"]["phone_number"], self.user_data["phone_number"])
+
+
+
+
+
+class LoginAPITestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='user@example.com',
+            username='testuser',
+            full_name='Some name',
+            password='securePassword123',
+            phone_number='+998936160099'
+        )
+        self.url = reverse('login')
+
+    def test_login_success(self):
+        response = self.client.post(self.url, {
+            "email": "user@example.com",
+            "password": "securePassword123"
+        }, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data['success'])
+        self.assertEqual(response.data['data']['user']['email'], "user@example.com")
+        self.assertIn("token", response.data['data'])
+
+    def test_login_wrong_password(self):
+        response = self.client.post(self.url, {
+            "email": "user@example.com",
+            "password": "wrongPassword"
+        }, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(response.data['success'])
+        self.assertIn('errors', response.data)
+
+    def test_login_non_existing_user(self):
+        response = self.client.post(self.url, {
+            "email": "nouser@example.com",
+            "password": "anything"
+        }, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(response.data['success'])
+        self.assertIn('errors', response.data)
 
 
 

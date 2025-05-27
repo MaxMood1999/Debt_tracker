@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from drf_spectacular.utils import extend_schema
 from rest_framework.authtoken.models import Token
-from rest_framework.fields import CharField, IntegerField, BooleanField, SerializerMethodField
+from rest_framework.exceptions import ValidationError
+from rest_framework.fields import CharField, IntegerField, BooleanField, SerializerMethodField, EmailField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -42,6 +43,17 @@ class RegisterSerializer(ModelSerializer):
                 "token": token.key
             }
         }
+
+class LoginSerializer(ModelSerializer):
+    email = EmailField()
+    password = CharField(write_only=True)
+    def validate(self, data):
+        user = authenticate(email=data('email'), password=data('password'))
+        if not user:
+            raise ValidationError("noto'g'ri email yoki password")
+        data['user'] = user
+        return data
+
 
 
 class OverdueDebtSerializer(ModelSerializer):
