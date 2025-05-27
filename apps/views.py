@@ -5,7 +5,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 
 from apps.models import Contact
-from apps.serializers import ContactSerializer, ContactQuerySerializer
+from apps.serializers import ContactSerializer
 
 
 @extend_schema(tags=["Contacts"])
