@@ -6,6 +6,7 @@ from apps.models import Contact, Debt
 from apps.serializers import ContactSerializer, DebtModelSerializer
 
 
+@extend_schema(tags=['contacts'])
 class ContactRetrieveAPIView(RetrieveAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
@@ -31,7 +32,6 @@ class ContactCreateAPIView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
         custom_response = {
             "success": True,
             "data": {
