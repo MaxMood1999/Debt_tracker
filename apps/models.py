@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.db.models import CharField, Model, ForeignKey, CASCADE
-from django.db.models.fields import DecimalField, DateTimeField, BooleanField
+from django.db.models import DecimalField, DateTimeField, BooleanField
 
 
 
