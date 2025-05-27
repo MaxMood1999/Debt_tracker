@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
@@ -12,7 +12,7 @@ class DebtModelSerializer(ModelSerializer):
         fields = 'contact', 'debt_amount', 'description', 'is_my_debt', 'due_date',
 
     def validate_due_date(self, value):
-        if value < datetime.now():
+        if value < date.today():
             raise ValidationError("Due date cannot be in the past")
         return value
 

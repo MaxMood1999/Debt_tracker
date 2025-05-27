@@ -12,3 +12,9 @@ class DebtCreateAPIView(CreateAPIView):
     queryset = Debt.objects.all()
     serializer_class = DebtModelSerializer
 
+
+    def create(self, request, *args, **kwargs):
+               pass
+
+
+
