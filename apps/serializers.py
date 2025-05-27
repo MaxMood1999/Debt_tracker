@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.fields import CharField, IntegerField, BooleanField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
+
 
 from apps.models import User, Debt
 
