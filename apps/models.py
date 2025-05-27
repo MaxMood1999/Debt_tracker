@@ -3,8 +3,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.db.models import CharField, Model, ForeignKey, CASCADE
 from django.db.models.fields import DecimalField, DateTimeField, BooleanField
-
-
+from rest_framework.fields import DateField
 
 
 class CustomUserManager(UserManager):
@@ -102,4 +101,12 @@ class Debt(Model):
 
 
 
-
+class Payment(Model):
+    debt = ForeignKey('apps.Debt', on_delete=CASCADE)
+    contact_name = CharField(max_length=255)
+    paid_amount = DecimalField(max_digits=10, decimal_places=2)
+    payment_description = CharField(max_length=255)
+    was_my_debt = BooleanField()
+    payment_date = DateTimeField()
+    class Meta:
+        app_label = 'apps'
