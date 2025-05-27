@@ -25,14 +25,13 @@ SECRET_KEY = 'django-insecure-mi7sdg)lm-*u)3fv=&w)#*3jo$i&d_w21i^g2tow*vrwys=vy$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'apps.User'
+
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_spectacular',
     'rest_framework',
+    'rest_framework.authtoken',
     'apps',
 ]
 
@@ -78,7 +78,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    "EXCEPTION_HANDLER": "apps.exceptions.custom_exception_handler"
 
 }
 # Database
