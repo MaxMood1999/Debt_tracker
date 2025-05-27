@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
+from rest_framework.authtoken.models import Token
 from rest_framework.fields import CharField, IntegerField, BooleanField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.views import APIView
@@ -12,34 +13,34 @@ from apps.models import User, Debt
 
 class RegisterSerializer(ModelSerializer):
     password = CharField(max_length=10, write_only=True)
+
     class Meta:
         model = User
-        fields = ['email', 'password',  "username"]
+        fields = ['email', 'password', 'username']
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            email = validated_data['email'],
-            full_name = validated_data['full_name'],
-            phone_number = validated_data['phone_number'],
-            password = self.validated_data['password'],
-            username = self.validated_data['username']
+            email=validated_data['email'],
+            full_name=validated_data['full_name'],
+            phone_number=validated_data['phone_number'],
+            password=validated_data['password'],
+            username=validated_data['username']
         )
         return user
-    def present(self, info):
-        token = RefreshToken.for_user(info)
+
+    def to_representation(self, info):
+        token, created = Token.objects.get_or_create(user=info)
         return {
             "success": True,
-            "data" : {
-                "user" : {
+            "data": {
+                "user": {
                     "id": info.id,
                     "email": info.email,
                     "full_name": info.full_name,
                     "phone_number": info.phone_number,
-
                 },
-                "token": str(token.access_token)
+                "token": token.key
             }
-
         }
 
 
