@@ -12,7 +12,11 @@ from apps.serializers import RegisterSerializer, OverdueDebtSerializer
 
 # Create your views here.
 
-@extend_schema(tags=["Register Post"])
+@extend_schema(
+    tags=["Register Post"],
+    request=RegisterSerializer,
+    responses={201: RegisterSerializer}
+)
 class RegisterView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
