@@ -6,6 +6,7 @@ from .serializers import PaymentSerializer
 
 @extend_schema(tags=['payment'])
 class TheirPaymentsView(APIView):
+    serializer_class = PaymentSerializer
     def get(self, request):
         payments = Payment.objects.all()
         serializer = PaymentSerializer(payments, many=True)
