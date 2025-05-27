@@ -1,16 +1,20 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
-from rest_framework.fields import CharField
+from drf_spectacular.utils import extend_schema
+from rest_framework.fields import CharField, IntegerField, BooleanField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.models import User
+from apps.models import User, Debt
 
 
 class RegisterSerializer(ModelSerializer):
     password = CharField(max_length=10, write_only=True)
     class Meta:
         model = User
-        fields = ['email', 'password', 'full_name', 'phone_number', "username"]
+        fields = ['email', 'password',  "username"]
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -37,3 +41,25 @@ class RegisterSerializer(ModelSerializer):
             }
 
         }
+
+
+class OverdueDebtSerializer(ModelSerializer):
+    contact_id = IntegerField(source='contact_id')
+    contact_name = CharField(source='contact_name')
+    is_overdue = BooleanField(source='is_overdue')
+    days_until_due = SerializerMethodField()
+    class Meta:
+        model = Debt
+        fields = ['id', 'contact_id', 'contact_name',
+                  'debt_amount', 'is_overdue', 'days_until_due',
+                  'description', 'is_my_debt', 'created_at', 'due_date',
+                  'is_paid_back'
+
+        ]
+    def get_is_overdue(self, obj):
+        return not obj.is_paid_back and obj.due_date < datetime.now(obj.due_date.tzinfo)
+
+    def get_days_until_due(self, obj):
+        difference_time = obj.due_date - datetime.now(obj.due_date.tzinfo)
+        return difference_time.days
+
