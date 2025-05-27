@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django.db.models import CharField, Model, ForeignKey, CASCADE
+from django.db.models import CharField, Model, ForeignKey, CASCADE, DateField
 from django.db.models.fields import DecimalField, DateTimeField, BooleanField
 
 
@@ -95,11 +95,15 @@ class Debt(Model):
     debt_amount = DecimalField(max_digits=10, decimal_places=2)
     description = CharField(max_length=255)
     created_at = DateTimeField(auto_now_add=True)
-    due_date = DateTimeField()
+    due_date = DateField()
     is_my_debt = BooleanField(default=False)
     is_paid_back = BooleanField(default=False)
+    paid_back_date = DateTimeField(null=True, blank=True)
     is_overdue = BooleanField(default=False)
 
 
-
-
+class Payment(models.Model):
+    debt = ForeignKey('apps.Debt', on_delete=CASCADE, related_name='payments')
+    paid_amount = DecimalField(max_digits=10, decimal_places=2)
+    payment_description = CharField(max_length=255)
+    payment_date = DateTimeField(auto_now_add=True)
