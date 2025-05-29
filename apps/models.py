@@ -1,8 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django.db.models import CharField, Model, ForeignKey, CASCADE
-from django.db.models.fields import DecimalField, DateTimeField, BooleanField
+from django.db.models import CharField, Model, ForeignKey, CASCADE, DecimalField, DateTimeField, BooleanField , DateField
 
 
 
@@ -45,7 +44,7 @@ class CustomUserManager(UserManager):
     async def acreate_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        return await self._acreate_user(username, email, password, **extra_fields)
+        return await self._acreate_user(email, password, **extra_fields)
 
     acreate_user.alters_data = True
 
@@ -95,7 +94,7 @@ class Debt(Model):
     debt_amount = DecimalField(max_digits=10, decimal_places=2)
     description = CharField(max_length=255)
     created_at = DateTimeField(auto_now_add=True)
-    due_date = DateTimeField()
+    due_date = DateField()
     is_my_debt = BooleanField(default=False)
     is_paid_back = BooleanField(default=False)
     is_overdue = BooleanField(default=False)

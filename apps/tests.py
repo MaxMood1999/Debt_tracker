@@ -1,25 +1,51 @@
 from django.test import TestCase
 
-# Create your tests here.
-
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+import pytest
+from rest_framework.test import APIClient
+from apps.models import Debt, Contact, User
+from django.utils import timezone
+from datetime import timedelta
 
-class RegisterUserAPITestCase(APITestCase):
-    def setUp(self):
-        self.url = reverse('auth-register')
-        self.user_data = {
-            "email": "user@example.com",
-            "password": "password",
-            "full_name": "example_username",
-            "phone_number": "+998901234567"
-        }
 
-    def test_register_user_successfully(self):
-        response = self.client.post(self.url, self.user_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn("token", response.data["data"])
-        self.assertEqual(response.data["data"]["user"]["email"], self.user_data["email"])
-        self.assertEqual(response.data["data"]["user"]["full_name"], self.user_data["full_name"])
-        self.assertEqual(response.data["data"]["user"]["phone_number"], self.user_data["phone_number"])
+
+
+
+@pytest.mark.django_db
+def test_summary_list_api():
+    client = APIClient()
+
+    user = User.objects.create_user(username="testuser", password="12345", email="alisher@gmail.com")
+
+    contact = Contact.objects.create(
+        name="Test Contact",
+        user=user
+    )
+
+    Debt.objects.create(
+        contact=contact,
+        debt_amount=100,
+        is_my_debt=True,
+        is_overdue=True,
+        due_date=timezone.now() - timedelta(days=1)
+    )
+    Debt.objects.create(
+        contact=contact,
+        debt_amount=200,
+        is_my_debt=False,
+        is_overdue=False,
+        due_date=timezone.now() + timedelta(days=10)
+    )
+
+    url = reverse("summary-list", kwargs={"pk": contact.id})  # URL name to‘g‘rilansin
+    response = client.get(url)
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["total_i_owe"] == 100.0
+    assert data["total_they_owe"] == 200.0
+    assert data["active_debts_count"] == 1
+    assert data["overdue_debts_count"] == 1
